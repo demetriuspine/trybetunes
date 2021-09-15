@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
+import Album from '../components/Album';
 import Header from '../components/Header';
+import Loading from '../components/Loading';
+import searchAlbumsAPI from '../services/searchAlbumsAPI';
 
 export default class Search extends Component {
   constructor() {
     super();
     this.state = {
       search: '',
+      loading: false,
+      artistsAlbum: [],
+      searchedContent: '',
+      showResults: false,
     };
   }
 
@@ -17,11 +24,28 @@ export default class Search extends Component {
     });
   }
 
-  render() {
-    const { search } = this.state;
+  onClick = async () => {
+    this.setState(
+      { loading: true },
+      async () => {
+        const { search } = this.state;
+        const requestedString = search;
+        const fetchApiReturn = await searchAlbumsAPI(requestedString);
+        this.setState(
+          { loading: false,
+            search: '',
+            artistsAlbum: fetchApiReturn,
+            searchedContent: requestedString,
+            showResults: true },
+        );
+      },
+    );
+  }
+
+  searchComponent() {
+    const { search, searchedContent } = this.state;
     return (
-      <div data-testid="page-search">
-        <Header />
+      <section data-testid="page-search">
         <form>
           <label htmlFor="search-artist-input">
             <input
@@ -36,10 +60,32 @@ export default class Search extends Component {
               type="button"
               value="Pesquisar"
               disabled={ search.length <= 1 }
+              onClick={ this.onClick }
             />
           </label>
         </form>
-      </div>
+        <h1>
+          { searchedContent.length === 0
+            ? ''
+            : `Resultado de álbuns de: ${searchedContent}` }
+        </h1>
+      </section>
+    );
+  }
+
+  render() {
+    const { loading, artistsAlbum, showResults } = this.state;
+    const results = artistsAlbum.length === 0
+      ? 'Nenhum álbum foi encontrado'
+      : <Album albumsArray={ artistsAlbum } />;
+    return (
+      <>
+        <Header />
+        { loading ? <Loading /> : this.searchComponent() }
+        <main>
+          { showResults ? results : '' }
+        </main>
+      </>
     );
   }
 }
