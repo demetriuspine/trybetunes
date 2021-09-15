@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Album from '../components/Album';
+import AlbumList from '../components/AlbumList';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
@@ -77,7 +77,7 @@ export default class Search extends Component {
     const { loading, artistsAlbum, showResults } = this.state;
     const results = artistsAlbum.length === 0
       ? 'Nenhum álbum foi encontrado'
-      : <Album albumsArray={ artistsAlbum } />;
+      : <AlbumList albumsArray={ artistsAlbum } />;
     return (
       <>
         <Header />
