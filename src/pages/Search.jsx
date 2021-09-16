@@ -26,7 +26,7 @@ export default class Search extends Component {
 
   onClick = async () => {
     this.setState(
-      { loading: true },
+      { loading: true, showResults: false },
       async () => {
         const { search } = this.state;
         const requestedString = search;
