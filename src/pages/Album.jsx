@@ -16,13 +16,8 @@ export default class Album extends Component {
     };
   }
 
-  componentDidMount() { // https://stackoverflow.com/questions/39767482/is-there-a-way-to-check-if-the-react-component-is-unmounted
-    this._isMounted = true;
+  componentDidMount() {
     this.getMusicsFromApi();
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   getMusicsFromApi = async () => {
